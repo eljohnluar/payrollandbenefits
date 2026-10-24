@@ -25,8 +25,8 @@ COPY frontend/ .
 # which Laravel handles directly — no proxy needed in production.
 # Supabase browser keys are baked into the JS bundle at build time.
 # Pass them as Build Arguments in the HostForge dashboard.
-ARG VITE_SUPABASE_URL=""
-ARG VITE_SUPABASE_ANON_KEY=""
+ARG VITE_SUPABASE_URL="https://dbtclnbadnhysvtudcmb.supabase.co"
+ARG VITE_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRidGNsbmJhZG5oeXN2dHVkY21iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAyNTc5MjQsImV4cCI6MjEwNTgzMzkyNH0.jlm56i-Qc2X6i_tMVRnYBAI4E5ohty7fC5LBqYN9MxU"
 ENV VITE_API_BASE="" \
     VITE_SUPABASE_URL=${VITE_SUPABASE_URL} \
     VITE_SUPABASE_ANON_KEY=${VITE_SUPABASE_ANON_KEY}
