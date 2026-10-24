@@ -117,7 +117,7 @@ DB_SSLMODE=require
 
 # App signing secret
 APP_SECRET=your-32-character-secret
-REGISTRATION_CODE=DEMO123
+REGISTRATION_CODE=
 
 # Gmail SMTP OTP Configuration
 MAIL_MAILER=
