@@ -67,7 +67,7 @@ RUN mkdir -p storage/framework/cache storage/framework/sessions \
              storage/framework/views storage/logs bootstrap/cache \
  && composer dump-autoload --optimize --no-dev \
  && php artisan package:discover --ansi \
- && chmod -R 775 storage bootstrap/cache
+ && chmod -R 775 storage bootstrap/cache public
 
 ENV PORT=8080
 EXPOSE 8080
