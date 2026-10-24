@@ -1,0 +1,35 @@
+# Docker build context exclusions — keep the image lean and secure.
+
+# Version control
+.git/
+.gitignore
+.gitattributes
+
+# Development artifacts
+frontend/node_modules/
+frontend/dist/
+laravel-backend/vendor/
+laravel-backend/node_modules/
+laravel-backend/public/build/
+laravel-backend/public/hot/
+laravel-backend/storage/logs/
+laravel-backend/bootstrap/cache/
+laravel-backend/tests/
+laravel-backend/_archive/
+
+# Secrets — never bake into the image; inject via HostForge env vars
+.env
+.env.*
+laravel-backend/.env
+laravel-backend/.env.*
+frontend/.env
+frontend/.env.*
+
+# OS / Editor noise
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+*.md
+vibe_images/

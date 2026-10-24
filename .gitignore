@@ -1,0 +1,41 @@
+# ── Environment files ─────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Frontend ──────────────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
+
+# ── Laravel backend ───────────────────────────────────────────────────────────
+laravel-backend/vendor/
+laravel-backend/node_modules/
+laravel-backend/public/build/
+laravel-backend/public/hot/
+laravel-backend/public/storage/
+laravel-backend/public/spa/
+laravel-backend/storage/*.key
+laravel-backend/storage/pail/
+laravel-backend/storage/logs/*.log
+laravel-backend/storage/framework/cache/data/
+laravel-backend/storage/framework/sessions/
+laravel-backend/storage/framework/views/
+laravel-backend/bootstrap/cache/*.php
+laravel-backend/.env
+laravel-backend/.env.*
+!laravel-backend/.env.example
+laravel-backend/.phpunit.result.cache
+laravel-backend/auth.json
+
+# ── OS / Editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+.nova/
+.zed/
+*.swp
