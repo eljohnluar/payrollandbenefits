@@ -21,7 +21,7 @@ export default function About() {
       <header className="lp-nav">
         <div className="lp-container lp-nav-inner">
           <Link to="/" className="lp-brand">
-            <img src="/logo.jpg" alt="Logo" className="lp-brand-logo" />
+            <img src={`${import.meta.env.BASE_URL}logo.jpg`} onError={(e) => { e.currentTarget.src = '/logo.jpg'; }} alt="Logo" className="lp-brand-logo" />
             <span className="lp-brand-title">{getCompanyAcronym(company)}</span>
           </Link>
           <div className="lp-about-nav">

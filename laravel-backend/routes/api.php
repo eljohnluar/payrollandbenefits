@@ -96,6 +96,27 @@ Route::post('/auth/register', static function (): \Illuminate\Http\JsonResponse 
     ), 201);
 });
 
+Route::post('/auth/verify-otp', static function (): \Illuminate\Http\JsonResponse {
+    $body = Http::body();
+    $email = Http::requireString($body, 'email');
+    $code = Http::requireString($body, 'code');
+    $pending = Http::requireString($body, 'pending');
+
+    $result = Auth::verifyLoginOtp($email, $code, $pending);
+    AuditService::log('User Login', 'Auth', (int) $result['user']['id'], ['email' => $result['user']['email'], 'via' => 'gmail_otp']);
+    return Http::json($result);
+});
+
+Route::post('/auth/resend-otp', static function (): \Illuminate\Http\JsonResponse {
+    $body = Http::body();
+    $email = Http::requireString($body, 'email');
+    $pending = Http::requireString($body, 'pending');
+
+    $result = Auth::resendLoginOtp($email, $pending);
+    AuditService::log('Login Code Resent', 'Auth', null, ['email' => $email]);
+    return Http::json($result);
+});
+
 Route::post('/auth/supabase', static function (): \Illuminate\Http\JsonResponse {
     $body = Http::body();
     $result = Auth::exchangeFromSupabase(Http::requireString($body, 'access_token'), $body);

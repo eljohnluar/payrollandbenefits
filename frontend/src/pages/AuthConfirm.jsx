@@ -6,7 +6,7 @@ import { supabase } from '../lib/supabase.js';
 import { useAuth } from '../auth/AuthContext.jsx';
 
 /**
- * Landing page for Supabase email-confirmation links and OTP/redirect flows.
+ * Landing page for Supabase Google OAuth redirects and confirmations.
  * Waits for the Supabase session, then exchanges it for an app JWT. First-time
  * users are asked for their registration code (and an app password used for
  * password-confirmed actions) before their account is provisioned.
@@ -28,7 +28,7 @@ export default function AuthConfirm() {
   useEffect(() => {
     if (!supabase) {
       setStatus('error');
-      setMessage('Supabase is not configured for this deployment.');
+      setMessage('Google authentication is not configured for this deployment.');
       return undefined;
     }
     let cancelled = false;
@@ -68,16 +68,18 @@ export default function AuthConfirm() {
     const { data } = supabase.auth.onAuthStateChange((_event, s) => {
       if (s?.access_token) resolve(s);
     });
-    supabase.auth.getSession().then(({ data: { session: s } }) => resolve(s));
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      if (s) resolve(s);
+    });
     const giveUp = setTimeout(() => {
       if (sessionFound) return;
       setStatus('error');
-      setMessage('No sign-in session found. Request a new link or code.');
-    }, 8000);
+      setMessage('No sign-in session found. Request a new link or try signing in again.');
+    }, 6000);
     return () => {
       cancelled = true;
       clearTimeout(giveUp);
-      data.subscription.unsubscribe();
+      data?.subscription?.unsubscribe?.();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -115,11 +117,11 @@ export default function AuthConfirm() {
       <form className="login-card" onSubmit={activate}>
         <div className="login-hero">
           <div className="brand-line">Payroll Management System</div>
-          <h1>{status === 'needs_activation' ? 'Activate your account' : 'Confirming your email…'}</h1>
+          <h1>{status === 'needs_activation' ? 'Activate your account' : status === 'working' ? 'Signing in with Google…' : 'Google Authentication'}</h1>
           <p>
-            {status === 'working' && 'One moment while we verify your Supabase session.'}
+            {status === 'working' && 'Verifying your Google session…'}
             {status === 'pending' && 'Open the link we emailed you, then return here.'}
-            {status === 'needs_activation' && 'Enter the registration code from HR to finish setting up.'}
+            {status === 'needs_activation' && 'Enter your registration code from HR to complete setup.'}
             {status === 'error' && 'We could not complete the sign-in.'}
           </p>
         </div>
@@ -165,7 +167,7 @@ export default function AuthConfirm() {
                     type="text"
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    placeholder="Provided by HR"
+                    placeholder="Provided by HR (e.g. DEMO123)"
                     required
                   />
                 </div>

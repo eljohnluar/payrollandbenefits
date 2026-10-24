@@ -150,7 +150,7 @@ export default function AppLayout() {
       <div className="sidebar-backdrop" onClick={toggleSidebar} />
       <aside className="app-side">
         <div className="brand">
-          <img src="/logo.jpg" alt="Company logo" />
+          <img src={`${import.meta.env.BASE_URL}logo.jpg`} onError={(e) => { e.currentTarget.src = '/logo.jpg'; }} alt="Company logo" />
           <span className="brand-text">{user?.role === 'Employee' ? 'Employee Portal' : 'HR Admin Portal'}</span>
         </div>
         <nav className="side-nav">

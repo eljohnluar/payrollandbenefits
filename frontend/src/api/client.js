@@ -78,6 +78,8 @@ export const api = {
   patch: (path, body) => request('PATCH', path, body ?? {}),
   del: (path) => request('DELETE', path),
   login: (email, password) => request('POST', '/api/auth/login', { email, password }),
+  verifyOtp: (email, code, pending) => request('POST', '/api/auth/verify-otp', { email, code, pending }),
+  resendOtp: (email, pending) => request('POST', '/api/auth/resend-otp', { email, pending }),
   register: (payload) => request('POST', '/api/auth/register', payload),
   supabaseLogin,
   health: () => request('GET', '/api/health'),

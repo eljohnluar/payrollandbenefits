@@ -170,11 +170,56 @@ final class Auth
             'iss'    => 'payroll-backend',
             'aud'    => 'payroll-frontend',
         ], 600);
+
+        // Send OTP directly via Gmail SMTP
+        EmailOtpService::sendLoginOtp($user['email']);
+
         return [
             'otp_required' => true,
             'email'        => $user['email'],
             'pending'      => $pending,
         ];
+    }
+
+    /**
+     * Verifies the 6-digit email OTP and issues the full user session.
+     */
+    public static function verifyLoginOtp(string $email, string $code, string $pending): array
+    {
+        $email = strtolower(trim($email));
+        $pc = self::verify($pending);
+        if ($pc === null || ($pc['scope'] ?? '') !== 'otp_pending'
+            || strcasecmp((string) ($pc['email'] ?? ''), $email) !== 0) {
+            Http::error('That verification request is no longer valid. Sign in again to get a new code.', 401);
+        }
+
+        if (!EmailOtpService::verifyOtp($email, $code, 'login')) {
+            Http::error('Invalid or expired verification code.', 422);
+        }
+
+        $user = self::findAppUser($email);
+        if ($user === null) {
+            Http::error('User account not found or is inactive.', 403);
+        }
+
+        return self::sessionFor($user);
+    }
+
+    /**
+     * Resends the login OTP code to user's email.
+     */
+    public static function resendLoginOtp(string $email, string $pending): array
+    {
+        $email = strtolower(trim($email));
+        $pc = self::verify($pending);
+        if ($pc === null || ($pc['scope'] ?? '') !== 'otp_pending'
+            || strcasecmp((string) ($pc['email'] ?? ''), $email) !== 0) {
+            Http::error('That verification request is no longer valid. Sign in again.', 401);
+        }
+
+        EmailOtpService::sendLoginOtp($email);
+
+        return ['message' => 'Verification code sent to your email.'];
     }
 
     /**
@@ -239,8 +284,12 @@ final class Auth
         if ($user === false) {
             Http::error('An error occurred during registration.', 500);
         }
+
+        // Send a registration confirmation email via Gmail SMTP
+        EmailOtpService::sendRegistrationWelcome($user['email'], $user['name']);
+
         return [
-            'message' => 'Registration successful. You can now login with your email.',
+            'message' => 'Registration successful. A confirmation email has been sent to your Gmail. You can now login with your email.',
             'user'    => ['id' => (int) $user['id'], 'email' => $user['email'], 'name' => $user['name'], 'role' => $user['role'], 'employee_id' => $user['employee_id'] ?? null],
         ];
     }
@@ -428,7 +477,7 @@ final class Auth
     private static function supabaseUser(string $baseUrl, string $anonKey, string $accessToken): ?array
     {
         $ch = curl_init(rtrim($baseUrl, '/') . '/auth/v1/user');
-        curl_setopt_array($ch, [
+        $opts = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 15,
             CURLOPT_HTTPHEADER     => [
@@ -436,7 +485,14 @@ final class Auth
                 'Authorization: Bearer ' . $accessToken,
                 'Content-Type: application/json',
             ],
-        ]);
+        ];
+        $caPath = dirname(__DIR__) . '/storage/cacert.pem';
+        if (is_file($caPath)) {
+            $opts[CURLOPT_CAINFO] = $caPath;
+        } elseif (is_file('C:/php/cacert.pem')) {
+            $opts[CURLOPT_CAINFO] = 'C:/php/cacert.pem';
+        }
+        curl_setopt_array($ch, $opts);
         $response = curl_exec($ch);
         $status = (int) curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         curl_close($ch);

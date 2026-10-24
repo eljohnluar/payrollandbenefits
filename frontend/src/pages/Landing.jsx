@@ -219,7 +219,7 @@ export default function Landing() {
       <header className="lp-nav">
         <div className="lp-container lp-nav-inner">
           <Link to="/" className="lp-brand">
-            <img src="/logo.jpg" alt="Logo" className="lp-brand-logo" />
+            <img src={`${import.meta.env.BASE_URL}logo.jpg`} onError={(e) => { e.currentTarget.src = '/logo.jpg'; }} alt="Logo" className="lp-brand-logo" />
             <span className="lp-brand-title">{getCompanyAcronym(company)}</span>
           </Link>
 
@@ -472,7 +472,7 @@ export default function Landing() {
         <div className="lp-container lp-footer-inner">
           <div className="lp-footer-col lp-footer-brand-col">
             <div className="lp-brand">
-              <img src="/logo.jpg" alt="Logo" className="lp-brand-logo" />
+              <img src={`${import.meta.env.BASE_URL}logo.jpg`} onError={(e) => { e.currentTarget.src = '/logo.jpg'; }} alt="Logo" className="lp-brand-logo" />
               <span className="lp-brand-title">{company}</span>
             </div>
             <p className="lp-footer-brand-text">

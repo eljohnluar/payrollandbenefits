@@ -61,6 +61,7 @@ COPY laravel-backend/ .
 # Copy the compiled React app into Laravel's public directory so it is served
 # as static files alongside the API.
 COPY --from=node-builder /build/dist ./public/spa
+RUN cp -rn ./public/spa/* ./public/ 2>/dev/null || true
 
 RUN mkdir -p storage/framework/cache storage/framework/sessions \
              storage/framework/views storage/logs bootstrap/cache \

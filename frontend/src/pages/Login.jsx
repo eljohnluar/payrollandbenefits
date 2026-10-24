@@ -121,21 +121,6 @@ export default function Login() {
     }
   }
 
-  async function sendLoginCode(loginEmail) {
-    const { error: sbError } = await supabase.auth.signInWithOtp({
-      email: loginEmail,
-      options: { shouldCreateUser: false },
-    });
-    if (sbError) {
-      throw new Error(
-        sbError.message.toLowerCase().includes('signups not allowed')
-          ? 'This account is not enrolled for email codes yet — ask the administrator to sync it into Supabase.'
-          : sbError.message
-      );
-    }
-    setOtpNote(`We emailed a 6-digit code to ${loginEmail}. It expires in a few minutes.`);
-  }
-
   async function submit(event) {
     event.preventDefault();
     setBusy(true);
@@ -143,16 +128,11 @@ export default function Login() {
     try {
       const result = await login(email, password);
       if (result?.otp_required) {
-        if (!supabase) {
-          setError('Email-code service is not configured on this deployment.');
-          return;
-        }
         setOtpEmail(result.email);
         setPending(result.pending);
         setOtpStage(true);
-        await sendLoginCode(result.email);
+        setOtpNote(`We emailed a 6-digit code to ${result.email}. It expires in 10 minutes.`);
       }
-      // No otp_required and no supabase client: legacy direct session.
       else navigate(result?.role === 'Employee' ? '/employee' : '/', { replace: true });
     } catch (e) {
       setError(e.message);
@@ -166,18 +146,16 @@ export default function Login() {
     setOtpBusy(true);
     setError('');
     try {
-      const { data, error: sbError } = await supabase.auth.verifyOtp({ email: otpEmail, token: otpCode, type: 'email' });
-      if (sbError) throw new Error(sbError.message);
-      const { status, payload } = await api.supabaseLogin(data.session.access_token, { pending });
-      if (status === 200) {
+      const payload = await api.verifyOtp(otpEmail, otpCode, pending);
+      if (payload?.token && payload?.user) {
         const sessionUser = adoptSession(payload);
         navigate(sessionUser?.role === 'Employee' ? '/employee' : '/', { replace: true });
         return;
       }
-      setError(payload?.error || 'Verification failed.');
-      if (status === 401) exitOtpStage();
+      setError('Verification failed.');
     } catch (e) {
       setError(e.message);
+      if (e.status === 401) exitOtpStage();
     } finally {
       setOtpBusy(false);
     }
@@ -193,7 +171,8 @@ export default function Login() {
   async function resendCode() {
     setError('');
     try {
-      await sendLoginCode(otpEmail);
+      await api.resendOtp(otpEmail, pending);
+      setOtpNote(`A fresh 6-digit verification code has been sent to ${otpEmail}.`);
     } catch (e) {
       setError(e.message);
     }

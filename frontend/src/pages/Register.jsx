@@ -113,29 +113,11 @@ export default function Register() {
     }
     setBusy(true);
     try {
-      if (supabase) {
-        const { data, error: sbError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/auth/confirm`,
-            data: { name: username, registration_code: registrationCode, account_type: accountType, employee_code: employeeCode },
-          },
-        });
-        if (sbError) throw new Error(sbError.message);
-        if (data.session) {
-          navigate('/auth/confirm', { replace: true });
-          return;
-        }
-        setSuccess('We sent a confirmation link to your email. Click it, then finish activating your account.');
-        setPassword('');
-        return;
-      }
       await api.register({ email, username, password, registration_code: registrationCode, account_type: accountType, employee_code: employeeCode });
-      setSuccess('Registration successful. You can now login with your email.');
+      setSuccess('Registration successful! A confirmation email was sent to your Gmail. Redirecting to login...');
       setPassword('');
       setRegistrationCode('');
-      setTimeout(() => navigate('/login', { replace: true }), 2000);
+      setTimeout(() => navigate('/login', { replace: true }), 2500);
     } catch (e) {
       setError(e.message);
     } finally {
