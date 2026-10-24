@@ -10,7 +10,7 @@ Status of HR3 endpoints when probed 2026-10-19: host reachable, paths return 404
 
 | Item | Value |
 |---|---|
-| Base URL (production) | `https://payrollandbenefits-backend.onrender.com` |
+| Base URL (production) | `https://payroll.mms-tmglt.com` |
 | Auth header | `X-Api-Key: ec4463df5ee5eea09d01ff907616caf9599b66e2d99221b2` |
 | Key name / scope | `hr3-performance` / `performance:write` (payslip/journal/employees endpoints are NOT reachable with this key) |
 | Content type | JSON, UTF-8 |
@@ -25,7 +25,7 @@ Share the key privately, same as HR1. Revocation is one click on our side; ask u
 **Push.** HR4 has no scheduler to pull on a cycle; HR3 should POST each record to our existing endpoint **at the moment it is approved**:
 
 ```
-POST https://payrollandbenefits-backend.onrender.com/api/integration/performance
+POST https://payroll.mms-tmglt.com/api/integration/performance
 X-Api-Key: <the key above>
 
 {"ratings":[

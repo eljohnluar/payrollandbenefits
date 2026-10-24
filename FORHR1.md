@@ -1,7 +1,7 @@
 # HR1 Integration — Notes & JSON Contracts (HR4 Payroll & Benefits side)
 
-Prepared: 2026-10-18
-Status: **BLOCKED on HR1 API key** — see §1.
+Prepared: 2026-10-18 · Updated: 2026-10-24
+Status: **VERIFIED & OPERATIONAL ✅** (API Key active, HTTP 200 live data).
 
 ---
 
@@ -235,5 +235,5 @@ Header: X-Api-Key: f646174a395c15ab14fa6cd389ac64237c92bbe9e5975632   (name: hr1
 
 - Prod routing was fine all along: our 404 body is `{"error":"Unknown employee code E001."}` (routing 404 reads `{"error":"Unknown endpoint."}`). PowerShell surfaces both as "(404) Not Found" — read the JSON body to tell them apart.
 - Root cause: E001 wasn't in our employee master. Fixed per owner decision: our Maria Santos record was re-coded `EMP-2026-002 → E001` (payslip history follows the record id, so her September payslip is now served under E001).
-- Verified on `https://payrollandbenefits-backend.onrender.com/api/integration/payslips/E001` with the `payroll:read` key: **200**, `employee{...basic_salary:"10770.00"}` + one `run_status:"Paid"` payslip (gross 39,702.94 / net 33,409.35).
+- Verified on `https://payroll.mms-tmglt.com/api/integration/payslips/E001` with the `payroll:read` key: **200**, `employee{...basic_salary:"10770.00"}` + one `run_status:"Paid"` payslip (gross 39,702.94 / net 33,409.35).
 - For E002–E050: no name overlap with our demo roster, so those codes will be created cleanly when HR1 pushes their employee master via `POST /api/integration/employees` (their `core-hr:write` key). Their payslips will populate as payroll runs are submitted on our side.

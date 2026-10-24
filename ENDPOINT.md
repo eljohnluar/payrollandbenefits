@@ -6,7 +6,7 @@ All endpoints are served by the Laravel backend (`laravel-backend/routes/api.php
 
 | Environment | Base URL | Notes |
 |---|---|---|
-| Production | `https://<render-backend-url>.onrender.com` | Render deploy URL of `laravel-backend/`; injected into the frontend as `VITE_API_BASE` (Vercel env var — not committed to this repo). Set `VITE_API_BASE=<url>` when calling from the frontend. |
+| Production | `https://payroll.mms-tmglt.com` | Official production domain for HR4 (Payroll & Benefits) hosted on HostForge. |
 | Local dev (Laravel) | `http://127.0.0.1:8090` | `php artisan serve` (current dev setup); the frontend proxies via `VITE_API_PROXY` in `frontend/.env.local` |
 | Local dev (legacy php -S) | `http://127.0.0.1:8080` | Old `frontend/.env` `VITE_API_PROXY`; note the 120 s timeout of `php -S` when running payroll compute |
 

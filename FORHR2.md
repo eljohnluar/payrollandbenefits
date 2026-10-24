@@ -9,7 +9,7 @@ Basis: exact queries in HR4's payroll engine (`laravel-backend/app/PayrollServic
 
 | Item | Value |
 |---|---|
-| Base URL (production) | `https://payrollandbenefits-backend.onrender.com` |
+| Base URL (production) | `https://payroll.mms-tmglt.com` |
 | Auth header | `X-Api-Key: 805fde94d400182c8f4961bab4c9aeec6540533459fe67d3` |
 | Key name / scope | `hr2-workforce` / `workforce:write` (attendance + leave endpoints only) |
 | Discovery (no auth) | `GET /api/integration/capabilities` |
