@@ -62,9 +62,9 @@ COPY laravel-backend/ .
 # as static files alongside the API.
 COPY --from=node-builder /build/dist ./public/spa
 
-RUN composer dump-autoload --optimize --no-dev \
- && mkdir -p storage/framework/cache storage/framework/sessions \
+RUN mkdir -p storage/framework/cache storage/framework/sessions \
              storage/framework/views storage/logs bootstrap/cache \
+ && composer dump-autoload --optimize --no-dev \
  && php artisan package:discover --ansi \
  && chmod -R 775 storage bootstrap/cache
 
