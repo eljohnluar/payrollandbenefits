@@ -10,7 +10,7 @@
 # =============================================================================
 
 # ── Stage 1: Build React frontend ────────────────────────────────────────────
-FROM node:20-alpine AS node-builder
+FROM node:22-alpine AS node-builder
 
 WORKDIR /build
 
