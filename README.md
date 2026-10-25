@@ -127,6 +127,7 @@ MAIL_USERNAME=your-email@gmail.com
 MAIL_PASSWORD="your-16-char-app-password"
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=your-email@gmail.com
+MAIL_FROM_NAME="TGLTI - Payroll System"
 ```
 
 Start the backend server on port 8080:

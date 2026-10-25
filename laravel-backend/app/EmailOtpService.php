@@ -28,14 +28,16 @@ final class EmailOtpService
     public static function sendLoginOtp(string $email): void
     {
         $code = self::generateOtp($email, 'login');
-        $appName = (string) env('APP_NAME', 'Payroll & Benefits System');
+        $senderName = (string) env('MAIL_FROM_NAME', 'TGLTI - Payroll System');
+        $fromAddress = (string) env('MAIL_FROM_ADDRESS', 'ejluar901@gmail.com');
 
         try {
             Mail::raw(
-                "Your {$appName} verification code is: {$code}\n\nThis code is valid for 10 minutes.\nIf you did not request this code, please ignore this email.",
-                static function ($message) use ($email, $code, $appName) {
+                "Your {$senderName} verification code is: {$code}\n\nThis code is valid for 10 minutes.\nIf you did not request this code, please ignore this email.",
+                static function ($message) use ($email, $code, $senderName, $fromAddress) {
                     $message->to($email)
-                        ->subject("[{$appName}] Your Login Verification Code: {$code}");
+                        ->from($fromAddress, $senderName)
+                        ->subject("[{$senderName}] Your Login Verification Code: {$code}");
                 }
             );
         } catch (\Throwable $e) {
@@ -52,14 +54,16 @@ final class EmailOtpService
      */
     public static function sendRegistrationWelcome(string $email, string $name): void
     {
-        $appName = (string) env('APP_NAME', 'Payroll & Benefits System');
+        $senderName = (string) env('MAIL_FROM_NAME', 'TGLTI - Payroll System');
+        $fromAddress = (string) env('MAIL_FROM_ADDRESS', 'ejluar901@gmail.com');
 
         try {
             Mail::raw(
-                "Hello {$name},\n\nYour account has been successfully registered on {$appName}.\n\nYou can now sign in using your email address ({$email}) and password.\nFor your security, a 6-digit one-time code will be sent to this email each time you log in.\n\nThank you,\n{$appName} Team",
-                static function ($message) use ($email, $appName) {
+                "Hello {$name},\n\nYour account has been successfully registered on {$senderName}.\n\nYou can now sign in using your email address ({$email}) and password.\nFor your security, a 6-digit one-time code will be sent to this email each time you log in.\n\nThank you,\n{$senderName} Team",
+                static function ($message) use ($email, $senderName, $fromAddress) {
                     $message->to($email)
-                        ->subject("[{$appName}] Account Registration Confirmed");
+                        ->from($fromAddress, $senderName)
+                        ->subject("[{$senderName}] Account Registration Confirmed");
                 }
             );
         } catch (\Throwable $e) {
@@ -76,14 +80,16 @@ final class EmailOtpService
     public static function sendRegistrationOtp(string $email): void
     {
         $code = self::generateOtp($email, 'register');
-        $appName = (string) env('APP_NAME', 'Payroll & Benefits System');
+        $senderName = (string) env('MAIL_FROM_NAME', 'TGLTI - Payroll System');
+        $fromAddress = (string) env('MAIL_FROM_ADDRESS', 'ejluar901@gmail.com');
 
         try {
             Mail::raw(
-                "Welcome to {$appName}!\n\nYour registration verification code is: {$code}\n\nThis code will expire in 10 minutes.\nEnter this code to complete your account setup.",
-                static function ($message) use ($email, $code, $appName) {
+                "Welcome to {$senderName}!\n\nYour registration verification code is: {$code}\n\nThis code will expire in 10 minutes.\nEnter this code to complete your account setup.",
+                static function ($message) use ($email, $code, $senderName, $fromAddress) {
                     $message->to($email)
-                        ->subject("[{$appName}] Confirm Your Registration: {$code}");
+                        ->from($fromAddress, $senderName)
+                        ->subject("[{$senderName}] Confirm Your Registration: {$code}");
                 }
             );
         } catch (\Throwable $e) {
