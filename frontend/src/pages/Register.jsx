@@ -103,7 +103,7 @@ export default function Register() {
       setError(pwIssue);
       return;
     }
-    if (!registrationCode.trim()) {
+    if (accountType === 'HR' && !registrationCode.trim()) {
       setError('The registration code from HR is required.');
       return;
     }
@@ -113,7 +113,14 @@ export default function Register() {
     }
     setBusy(true);
     try {
-      await api.register({ email, username, password, registration_code: registrationCode, account_type: accountType, employee_code: employeeCode });
+      await api.register({
+        email,
+        username,
+        password,
+        registration_code: accountType === 'Employee' ? 'DEMO123' : registrationCode,
+        account_type: accountType,
+        employee_code: accountType === 'Employee' ? employeeCode : '',
+      });
       setSuccess('Registration successful! A confirmation email was sent to your Gmail. Redirecting to login...');
       setPassword('');
       setRegistrationCode('');
@@ -130,12 +137,12 @@ export default function Register() {
       company={company}
       info={{
         title: 'Create your account',
-        subtitle: 'Employees and HR Admins register here — the same code applies to both.',
+        subtitle: 'Employees and HR Admins register here.',
         bullets: [
           'Employee portal: attendance per cut-off, adjustments, claims, benefits, payroll summary',
           'HR Admin: full payroll, compensation, attendance and reporting workspace',
-          'A registration code from the company is required',
-          'Employee sign-ups are always accepted — the account links to your records automatically when your email matches, and HR can attach it later either way',
+          'HR Admin registration requires the code issued by the system administrator',
+          'Employee sign-ups are always accepted — your account links to your records automatically when your email matches, or HR can attach it later',
         ],
         foot: 'Password resets are handled by the system administrator — there is no self-service reset.',
       }}
@@ -202,13 +209,39 @@ export default function Register() {
           </ul>
         </div>
 
-        <div className="login-field">
-          <label htmlFor="registration_code">Registration code</label>
-          <div className="input-wrap">
-            <span className="lead-icon"><Icon name="key" /></span>
-            <input id="registration_code" type="text" value={registrationCode} onChange={(e) => setRegistrationCode(e.target.value)} placeholder="Provided by the company" required />
+        {/* Registration code — HR Admin only */}
+        {accountType === 'HR' && (
+          <div className="login-field">
+            <label htmlFor="registration_code">Registration code</label>
+            <div className="input-wrap">
+              <span className="lead-icon"><Icon name="key" /></span>
+              <input id="registration_code" type="text" value={registrationCode} onChange={(e) => setRegistrationCode(e.target.value)} placeholder="Provided by the company" required />
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Employee code — Employee only */}
+        {accountType === 'Employee' && (
+          <div className="login-field">
+            <label htmlFor="employee_code">
+              Employee code{' '}
+              <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(optional)</span>
+            </label>
+            <div className="input-wrap">
+              <span className="lead-icon"><Icon name="key" /></span>
+              <input
+                id="employee_code"
+                type="text"
+                value={employeeCode}
+                onChange={(e) => setEmployeeCode(e.target.value.toUpperCase())}
+                placeholder="e.g. E001"
+              />
+            </div>
+            <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>
+              Found on your company ID or payslip. Links your account instantly.
+            </span>
+          </div>
+        )}
 
         <div className="login-field terms-actions">
           <input
@@ -234,7 +267,7 @@ export default function Register() {
             <button type="button" className="btn-block secondary google-btn" onClick={registerWithGoogle} disabled={busy || googleBusy}>
               <GoogleG /> {googleBusy ? 'Opening Google…' : 'Register with Gmail'}
             </button>
-            <p className="google-note">Gmail sign-up is verified by Google; you will still enter your registration code on the next step.</p>
+            <p className="google-note">{accountType === 'HR' ? 'Gmail sign-up is verified by Google; you will still enter your registration code on the next step.' : 'Gmail sign-up is verified by Google. Your account will link to your records automatically.'}</p>
           </div>
         )}
 
