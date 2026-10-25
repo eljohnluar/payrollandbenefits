@@ -108,21 +108,21 @@ php artisan key:generate
 Configure your `.env` with your database and email credentials:
 ```ini
 DB_CONNECTION=pgsql
-DB_HOST=aws-0-ap-south-1.pooler.supabase.com
-DB_PORT=6543
+DB_HOST=
+DB_PORT=
 DB_DATABASE=postgres
-DB_USERNAME=postgres.dbtclnbadnhysvtudcmb
+DB_USERNAME=
 DB_PASSWORD=YourDatabasePassword
 DB_SSLMODE=require
 
 # App signing secret
 APP_SECRET=your-32-character-secret
-REGISTRATION_CODE=DEMO123
+REGISTRATION_CODE=
 
 # Gmail SMTP OTP Configuration
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
+MAIL_MAILER=
+MAIL_HOST=
+MAIL_PORT=
 MAIL_USERNAME=your-email@gmail.com
 MAIL_PASSWORD="your-16-char-app-password"
 MAIL_ENCRYPTION=tls
