@@ -135,7 +135,7 @@ export default function Register() {
           'Employee portal: attendance per cut-off, adjustments, claims, benefits, payroll summary',
           'HR Admin: full payroll, compensation, attendance and reporting workspace',
           'A registration code from the company is required',
-          'Employee sign-ups are always accepted — the account links to your records automatically when your email or employee code matches, and HR can attach it later either way',
+          'Employee sign-ups are always accepted — the account links to your records automatically when your email matches, and HR can attach it later either way',
         ],
         foot: 'Password resets are handled by the system administrator — there is no self-service reset.',
       }}
@@ -209,19 +209,6 @@ export default function Register() {
             <input id="registration_code" type="text" value={registrationCode} onChange={(e) => setRegistrationCode(e.target.value)} placeholder="Provided by the company" required />
           </div>
         </div>
-
-        {accountType === 'Employee' && (
-          <div className="login-field">
-            <label htmlFor="employee_code">Employee code <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(optional — links your account instantly)</span></label>
-            <div className="input-wrap">
-              <span className="lead-icon"><Icon name="user" /></span>
-              <input id="employee_code" type="text" value={employeeCode} onChange={(e) => setEmployeeCode(e.target.value.toUpperCase())} placeholder="e.g. EMP-2026-001" />
-            </div>
-            <span style={{ fontSize: 11.5, color: 'var(--text-muted)' }}>
-              Printed on your company ID or payslip. It links this login to your attendance, claims and pay records.
-            </span>
-          </div>
-        )}
 
         <div className="login-field terms-actions">
           <input

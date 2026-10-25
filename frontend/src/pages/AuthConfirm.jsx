@@ -142,21 +142,9 @@ export default function AuthConfirm() {
                   </button>
                 </div>
                 {accountType === 'Employee' && (
-                  <>
-                    <p style={{ fontSize: 11.5, color: 'var(--text-muted)', margin: '6px 0 0' }}>
-                      Use the same email HR has on file for you — or enter your employee code below.
-                    </p>
-                    <div style={{ marginTop: 10 }}>
-                      <label htmlFor="confirm-emp-code">Employee code (if your email isn’t on file)</label>
-                      <input
-                        id="confirm-emp-code"
-                        type="text"
-                        value={employeeCode}
-                        onChange={(e) => setEmployeeCode(e.target.value.toUpperCase())}
-                        placeholder="e.g. EMP-2026-001"
-                      />
-                    </div>
-                  </>
+                  <p style={{ fontSize: 11.5, color: 'var(--text-muted)', margin: '6px 0 0' }}>
+                    Use the same email HR has on file for you to link your profile automatically.
+                  </p>
                 )}
               </div>
               {needsCode && (
